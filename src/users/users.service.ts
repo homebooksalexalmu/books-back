@@ -8,6 +8,6 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users: ${process.env.DATABASE_URL}`;
+    return `This action returns all users: ${process.env.MONGODB_URI}`;
   }
 }
