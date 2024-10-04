@@ -3,9 +3,12 @@ import {
   Get,
   Post,
   Body,
+  UseGuards,
+  Headers,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { JwtAuthGuard } from "../auth/guards/JwtAuth.guard";
 
 @Controller("users")
 export class UsersController {
@@ -17,7 +20,9 @@ export class UsersController {
   }
 
   @Get()
-  async findAll() {
+  @UseGuards(JwtAuthGuard)
+  async findAll(@Headers() headers) {
     return await this.usersService.findAll();
   }
+
 }

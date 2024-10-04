@@ -30,7 +30,10 @@ export class UsersService {
 
   async findAll() {
     const result = await this.userModel.find({});
-    console.log(result)
     return JSON.stringify(result);
+  }
+
+  async findOneByEmailOrAuth0Id(email: string, auth0Id?: string) {
+    return this.userModel.findOne({ email, auth0Id })
   }
 }
