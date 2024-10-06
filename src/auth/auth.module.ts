@@ -18,7 +18,7 @@ import { UsersService } from './auth.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          secret: configService.get("JWT_SECRET"),
+          secret: process.env.JWT_SECRET,
           signOptions: {}
         }
       }
