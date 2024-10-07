@@ -11,6 +11,7 @@ import { CommonModule } from 'src/common/common.module';
     CommonModule
   ],
   controllers: [CategoriesController],
-  providers: [CategoriesService],
+  providers: [CategoriesService, Category],
+  exports: [CategoriesService]
 })
 export class CategoriesModule { }
