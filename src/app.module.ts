@@ -8,9 +8,10 @@ import { CategoriesModule } from './categories/categories.module';
 import { CommonModule } from './common/common.module';
 import { BooksModule } from './books/books.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { ReadsModule } from './reads/reads.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), MongooseModule.forRoot(process.env.MONGODB_URI), AuthModule, CategoriesModule, CommonModule, BooksModule, CloudinaryModule],
+  imports: [ConfigModule.forRoot(), MongooseModule.forRoot(process.env.MONGODB_URI), AuthModule, CategoriesModule, CommonModule, BooksModule, CloudinaryModule, ReadsModule],
   controllers: [AppController],
   providers: [AppService],
 })
