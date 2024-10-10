@@ -64,8 +64,31 @@ export class ReadsService {
         }
       },
       {
+        $lookup: {
+          from: "categories",
+          localField: "categories",
+          foreignField: "_id",
+          as: "categoryDetails"
+        }
+      },
+      {
+        $addFields: {
+          categories: {
+            $map: {
+              input: "$categoryDetails",
+              as: "category",
+              in: {
+                _id: "$$category._id",
+                name: "$$category.name"
+              }
+            }
+          }
+        }
+      },
+      {
         $project: {
           bookInfo: 0,
+          categoryDetails: 0,
           _id: 0
         }
       },
@@ -81,9 +104,9 @@ export class ReadsService {
         }
       },
       {
-        "$unwind": {
-          "path": "$userDetails",
-          "preserveNullAndEmptyArrays": true
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
         }
       },
       {
@@ -162,8 +185,31 @@ export class ReadsService {
         }
       },
       {
+        $lookup: {
+          from: "categories",
+          localField: "categories",
+          foreignField: "_id",
+          as: "categoryDetails"
+        }
+      },
+      {
+        $addFields: {
+          categories: {
+            $map: {
+              input: "$categoryDetails",
+              as: "category",
+              in: {
+                _id: "$$category._id",
+                name: "$$category.name"
+              }
+            }
+          }
+        }
+      },
+      {
         $project: {
           bookInfo: 0,
+          categoryDetails: 0,
           _id: 0
         }
       },
@@ -179,9 +225,9 @@ export class ReadsService {
         }
       },
       {
-        "$unwind": {
-          "path": "$userDetails",
-          "preserveNullAndEmptyArrays": true
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
         }
       },
       {
