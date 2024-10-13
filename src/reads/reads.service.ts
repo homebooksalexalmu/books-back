@@ -1,19 +1,27 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateReadDto } from './dto/create-read.dto';
 import { UpdateReadDto } from './dto/update-read.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Read } from './entities/read.entity';
 import { Model, Types } from 'mongoose';
+import { UsersService } from 'src/auth/auth.service';
 
 @Injectable()
 export class ReadsService {
 
-  constructor(@InjectModel(Read.name) private readModel: Model<Read>) { }
+  constructor(@InjectModel(Read.name) private readModel: Model<Read>, private readonly userService: UsersService) { }
 
   async create(createReadDto: CreateReadDto) {
+
+    const user = await this.userService.findOneByAuth0Id(createReadDto.user);
+
+    if (!user) {
+      throw new UnauthorizedException(`User with email or id <${createReadDto.user}> doesnt exists`);
+    }
+
     const formattedDTO = {
       ...createReadDto,
-      user: new Types.ObjectId(createReadDto.user)
+      user: new Types.ObjectId(String(user._id))
     }
     if (await this.findOneByUserAndBook(formattedDTO.user, formattedDTO.book)) {
       throw new BadRequestException("This read already exists");

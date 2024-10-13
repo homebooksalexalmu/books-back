@@ -36,4 +36,8 @@ export class UsersService {
     async findOneByEmailOrAuth0Id(email: string, auth0Id?: string) {
         return this.userModel.findOne({ email, auth0Id })
     }
+
+    async findOneByAuth0Id(auth0Id: string) {
+        return this.userModel.findOne({ auth0Id })
+    }
 }
