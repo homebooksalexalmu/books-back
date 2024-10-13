@@ -11,11 +11,15 @@ export class ReadsService {
   constructor(@InjectModel(Read.name) private readModel: Model<Read>) { }
 
   async create(createReadDto: CreateReadDto) {
-    if (await this.findOneByUserAndBook(createReadDto.user, createReadDto.book)) {
+    const formattedDTO = {
+      ...createReadDto,
+      user: new Types.ObjectId(createReadDto.user)
+    }
+    if (await this.findOneByUserAndBook(formattedDTO.user, formattedDTO.book)) {
       throw new BadRequestException("This read already exists");
     }
 
-    const newRead = this.readModel.create(createReadDto);
+    const newRead = this.readModel.create(formattedDTO);
     return newRead;
   }
 
