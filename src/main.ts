@@ -13,7 +13,7 @@ async function bootstrap() {
     whitelist: true,
   }));
   app.enableCors({
-    origin: ["http://localhost:3001", "https://books-frontend-rho.vercel.app/"],
+    origin: "*",
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     preflightContinue: false,
     optionsSuccessStatus: 204,
