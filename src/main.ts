@@ -13,8 +13,8 @@ async function bootstrap() {
     whitelist: true,
   }));
   app.enableCors({
-    origin: "*",
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    origin: "http://localhost:3001",
+    methods: "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
