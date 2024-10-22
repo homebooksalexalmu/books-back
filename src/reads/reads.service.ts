@@ -247,7 +247,8 @@ export class ReadsService {
           "userReads.user": {
             _id: "$userDetails._id",
             name: "$userDetails.name",
-            picture: "$userDetails.picture"
+            picture: "$userDetails.picture",
+            sub: "$userDetails.auth0Id"  // Añadimos el campo `sub` aquí
           }
         }
       },
