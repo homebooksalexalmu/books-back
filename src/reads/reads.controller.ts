@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ReadsService } from './reads.service';
 import { CreateReadDto } from './dto/create-read.dto';
 import { UpdateReadDto } from './dto/update-read.dto';
+import { FindAllDto } from './dto/find-all.dto';
 
 @Controller('reads')
 export class ReadsController {
@@ -13,8 +14,8 @@ export class ReadsController {
   }
 
   @Get()
-  findAll() {
-    return this.readsService.findAll();
+  findAll(@Query() query: FindAllDto) {
+    return this.readsService.findAllByCriteria(query);
   }
 
   @Get(':isbn')

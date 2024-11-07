@@ -31,8 +31,16 @@ export class ReadsService {
     return newRead;
   }
 
-  findAll() {
+  async findAllByCriteria(criteria: any) {
+    const user = criteria.reader ? await this.userService.findOneByAuth0Id(criteria.reader) : undefined;
+    const criteriaMatch = {
+      ...(criteria.status && criteria.status.length ? { status: criteria.status } : undefined),
+      ...(user ? { user: user._id } : undefined)
+    }
     return this.readModel.aggregate([
+      {
+        $match: criteriaMatch
+      },
       {
         $group: {
           _id: "$book",
@@ -61,6 +69,15 @@ export class ReadsService {
           preserveNullAndEmptyArrays: true
         }
       },
+      ...(criteria.categories && criteria.categories !== ""
+        ? [
+          {
+            $match: {
+              "bookInfo.categories": { $in: [new Types.ObjectId(String(criteria.categories))] }
+            }
+          }
+        ]
+        : []),
       {
         $addFields: {
           isbn: "$_id",
@@ -144,6 +161,11 @@ export class ReadsService {
           createdAt: { "$first": "$createdAt" },
           updatedAt: { "$first": "$updatedAt" },
           userReads: { "$push": "$userReads" }
+        }
+      },
+      {
+        $sort: {
+          createdAt: -1
         }
       }
     ]);
