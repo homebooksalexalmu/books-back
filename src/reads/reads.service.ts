@@ -261,9 +261,29 @@ export class ReadsService {
         }
       },
       {
+        $lookup: {
+          from: "ratings",
+          localField: "isbn",
+          foreignField: "isbn",
+          as: "ratingsInfo"
+        }
+      },
+      {
+        $addFields: {
+          averageRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$ratingsInfo" }, 0] },
+              then: { $avg: "$ratingsInfo.rate" },
+              else: null
+            }
+          }
+        }
+      },
+      {
         $project: {
           bookInfo: 0,
           categoryDetails: 0,
+          ratingsInfo: 0,
           _id: 0
         }
       },
@@ -290,7 +310,7 @@ export class ReadsService {
             _id: "$userDetails._id",
             name: "$userDetails.name",
             picture: "$userDetails.picture",
-            sub: "$userDetails.auth0Id"  // Añadimos el campo `sub` aquí
+            sub: "$userDetails.auth0Id"
           }
         }
       },
@@ -307,11 +327,13 @@ export class ReadsService {
           pages: { "$first": "$pages" },
           createdAt: { "$first": "$createdAt" },
           updatedAt: { "$first": "$updatedAt" },
+          averageRating: { "$first": "$averageRating" },
           userReads: { "$push": "$userReads" }
         }
       }
     ]);
   }
+
 
   async findOneByUserAndBook(user: string | Types.ObjectId, isbn: string) {
     const result = await this.readModel.findOne({ book: isbn, user });
