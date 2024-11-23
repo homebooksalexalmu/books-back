@@ -36,7 +36,7 @@ export class ReadsService {
     const criteriaMatch = {
       ...(criteria.status && criteria.status.length ? { status: criteria.status } : undefined),
       ...(user ? { user: user._id } : undefined)
-    }
+    };
     return this.readModel.aggregate([
       {
         $match: criteriaMatch
@@ -148,6 +148,25 @@ export class ReadsService {
         }
       },
       {
+        $lookup: {
+          from: "ratings",
+          localField: "isbn",
+          foreignField: "isbn",
+          as: "ratings"
+        }
+      },
+      {
+        $addFields: {
+          averageRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$ratings" }, 0] },
+              then: { $avg: "$ratings.rate" },
+              else: null
+            }
+          }
+        }
+      },
+      {
         $group: {
           _id: "$isbn",
           isbn: { "$first": "$isbn" },
@@ -160,6 +179,7 @@ export class ReadsService {
           pages: { "$first": "$pages" },
           createdAt: { "$first": "$createdAt" },
           updatedAt: { "$first": "$updatedAt" },
+          averageRating: { "$first": "$averageRating" },
           userReads: { "$push": "$userReads" }
         }
       },
