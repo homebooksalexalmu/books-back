@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, MethodNotAllowedException } from '@nestjs/common';
+import { BadRequestException, Injectable, MethodNotAllowedException, NotImplementedException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Model, RootFilterQuery, Types } from 'mongoose';
@@ -62,8 +62,15 @@ export class BooksService {
     await this.bookModel.updateOne({ _id: isbn }, { $set: { categories: categoryIds } });
   }
 
-  update(isbn: string, updateBookDto: UpdateBookDto) {
-    throw new MethodNotAllowedException("Update method not implemented yet.");
+  async update(isbn: string, updateBookDto: UpdateBookDto) {
+    if (!updateBookDto.newBook) return;
+    const authors = updateBookDto.newBook.authors.map((author: { value: string }) => author.value);
+    const book = { ...updateBookDto.newBook, authors}
+    await this.bookModel.updateOne({ _id: isbn }, { $set: { ...book } });
+  }
+
+  async updateImage(isbn: string, updatedImageBook: any) {
+    throw new NotImplementedException();
   }
 
 }

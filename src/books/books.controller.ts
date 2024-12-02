@@ -29,4 +29,9 @@ export class BooksController {
 
     return this.booksService.update(isbn, updateBookDto);
   }
+
+  @Patch(':isbn/image')
+  updateImage(@Param('isbn') isbn: string, @Body() updateBookDto: UpdateBookDto) {
+    return this.booksService.updateImage(isbn, updateBookDto);
+  }
 }
